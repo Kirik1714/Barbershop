@@ -1,24 +1,43 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import { Colors } from "@/shared/tokens";
+import { Slot, SplashScreen, Stack } from "expo-router";
+import { StyleSheet, View } from "react-native";
+import { useFonts } from "expo-font";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useEffect } from "react";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+SplashScreen.preventAutoHideAsync(); 
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const [loaded] = useFonts({
+    FiraSansRegular: require("../assets/fonts/FiraSans-Regular.ttf"),
+    FiraSansSemiBold: require("../assets/fonts/FiraSans-SemiBold.ttf")
+
+
+  })
+  useEffect(()=>{
+
+    if(loaded){
+      SplashScreen.hideAsync()
+    }
+  },[loaded])
+
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <View style={styles.container}>
+        <Slot />
+      </View>
+    </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: Colors.white, 
+        justifyContent: 'flex-start', // подтягивает содержимое к верху
+
+  },
+  
+});
