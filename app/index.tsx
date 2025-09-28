@@ -56,7 +56,7 @@ export default function Login() {
               </View>
 
               <Button
-                title="Login"
+                title="Войти"
                 onPress={() => router.push("/Registration")}
               />
             </View>
@@ -67,7 +67,7 @@ export default function Login() {
                 </Link>
               </View>
               <View>
-                <Link href="/" style={styles.option}>
+                <Link href="/Registration" style={styles.option}>
                   Нет аккаунта?
                 </Link>
               </View>
@@ -90,6 +90,7 @@ const styles = StyleSheet.create({
     gap: 25,
   },
   form: {
+
     gap: 35,
   },
   variousSignIn: {

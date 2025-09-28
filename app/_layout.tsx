@@ -25,6 +25,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
+      
       <View style={styles.container}>
         <Slot />
       </View>
@@ -36,8 +37,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white, 
-        justifyContent: 'flex-start', // подтягивает содержимое к верху
-
+        justifyContent: 'flex-start',
   },
   
 });
