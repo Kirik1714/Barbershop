@@ -1,5 +1,5 @@
 import { Colors } from "@/shared/tokens";
-import { Slot, SplashScreen, Stack } from "expo-router";
+import {  SplashScreen, Stack } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -27,7 +27,16 @@ export default function RootLayout() {
     <SafeAreaProvider>
       
       <View style={styles.container}>
-        <Slot />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="index" />
+        <Stack.Screen name="Registration" />
+
+
+      </Stack>
       </View>
     </SafeAreaProvider>
   );

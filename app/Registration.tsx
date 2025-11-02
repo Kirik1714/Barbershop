@@ -34,7 +34,12 @@ export default function Registration() {
               <View style={styles.inputs}>
                 <Input
                   value={email}
-                  placeholder="Логин"
+                  placeholder="Имя"
+                  onChangeText={setEmail}
+                />
+                  <Input
+                  value={email}
+                  placeholder="Почта"
                   onChangeText={setEmail}
                 />
         

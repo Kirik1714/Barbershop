@@ -4,7 +4,9 @@ export const Colors = {
 	milk: '#ebe7e7ff',
  	grey:'#5a5151ff',
 	primary:'#007AFF',
-	success : "#34C759"
+	success : "#34C759",
+	black:'#000000',
+	gray:'#898989'
 
 	
 };
@@ -23,5 +25,6 @@ export const Radius = {
 };
 
 export const Fonts = {
-	f17:17
+	f17:17,
+	f13:15,
 };

@@ -25,7 +25,9 @@ export default function Input({
           value={value}
           secureTextEntry={secureTextEntry}
           onChangeText={onChangeText}
-          
+           autoComplete="off"           // отключает автозаполнение
+  textContentType="none"       // говорит iOS, что это не email/пароль
+  autoCorrect={false}   
         />
       </View>
     </>

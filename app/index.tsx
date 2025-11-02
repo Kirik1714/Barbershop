@@ -5,12 +5,11 @@ import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import Button from "@/shared/components/Button";
 import {
-  Image,
+  
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  Text,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -30,8 +29,6 @@ export default function Login() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView edges={['bottom', 'left', 'right',]}style={{ flex: 1,  justifyContent: 'center' }} >
             
-
-
           <Logo  />
           <View style={styles.container}>
             <View style={styles.form}>
@@ -62,7 +59,7 @@ export default function Login() {
             </View>
             <View style={styles.variousSignIn}>
               <View>
-                <Link href="/" style={styles.option}>
+                <Link href="/main" style={styles.option}>
                   Зайти как гость?
                 </Link>
               </View>
