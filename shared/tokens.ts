@@ -25,6 +25,8 @@ export const Radius = {
 };
 
 export const Fonts = {
+	f23:23,
+	f20:20,
 	f17:17,
 	f13:15,
 };
