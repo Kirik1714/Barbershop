@@ -48,8 +48,8 @@ export default function SelectDateScreen() {
               monthTextColor: Colors.black,
               arrowColor: Colors.black,
               textDayFontSize: 20,
-    textMonthFontSize: 20,
-    textDayHeaderFontSize: 15,
+              textMonthFontSize: 20,
+              textDayHeaderFontSize: 15,
             }}
           />
         </View>
