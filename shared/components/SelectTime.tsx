@@ -28,7 +28,7 @@ export default function SelectTime({
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+   width: "29.5%",
     padding: 10,
     alignItems: "center",
     backgroundColor: Colors.white,

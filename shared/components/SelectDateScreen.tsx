@@ -21,7 +21,7 @@ export default function SelectDateScreen() {
   return (
     <View style={styles.container}>
       <CalendarProvider date={"2025-11-07"}>
-        <View style={{ height: 400, alignSelf: "center" }}>
+        <View style={{  alignSelf: "center" }}>
           <Calendar
             firstDay={1}
             hideArrows={false}

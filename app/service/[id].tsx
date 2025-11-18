@@ -1,3 +1,4 @@
+import Button from "@/shared/components/Button";
 import ReturnButtom from "@/shared/components/ReturnButton";
 import SelectBarber from "@/shared/components/SelectBarber";
 import SelectDateScreen from "@/shared/components/SelectDateScreen";
@@ -32,105 +33,107 @@ const barbers = [
   {
     id: "1",
     name: "Alex Johnson",
-    image: require('../../assets/images/barber.png'),
+    image: require('../../assets/images/barber1.png'),
   },
   {
     id: "2",
     name: "Maria Lopez",
-    image: require(`../../assets/images/barber1.png`),
+    image: require(`../../assets/images/noImage.png`),
 
   },
   {
     id: "3",
     name: "David Kim",
-    image: require('../../assets/images/barber.png'),
+    image: require('../../assets/images/barber1.png'),
 
   },
   {
     id: "4",
     name: "Sophia Brown",
-    image: require('../../assets/images/barber.png'),
+    image: require('../../assets/images/noImage.png'),
 
 
   },
   {
     id: "5",
     name: "James Smith",
-    image: require('../../assets/images/barber.png'),
+    image: require('../../assets/images/barber1.png'),
 
 
   },
 ];
 export default function Appointment() {
-  const [pickedTime, setPickedTime] = useState<string | undefined>(time[0]);
-  const [pickedBarber, setPickedBarber] = useState<
-    SelectBarberProps | undefined
-  >();
+  const [pickedTime, setPickedTime] = useState<string>(time[0]);
+  const [pickedBarber, setPickedBarber] = useState<SelectBarberProps>();
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.container__header}>
-        <ReturnButtom />
-        <Text style={[styles.header__top, styles.header__text]}>
-          Записаться на приём
-        </Text>
-      </View>
-      <View style={styles.pick__full__time}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        
+        <View style={styles.container__header}>
+          <ReturnButtom />
+          <Text style={[styles.header__top, styles.header__text]}>
+            Записаться на приём
+          </Text>
+        </View>
+
         <View style={styles.calendar__wrapper}>
           <SelectDateScreen />
         </View>
+
         <View style={styles.time__wrapper}>
-          <View style={styles.available__slot}>
-            <Text style={[styles.header__text]}>Доступноё время</Text>
-          </View>
+          <Text style={styles.header__text}>Доступное время</Text>
 
-          <FlatList
-            numColumns={3}
-            columnWrapperStyle={styles.available__slot__list}
-            data={time}
-            renderItem={({ item }) => (
+          <View style={styles.available__slot__list}>
+            {time.map((t) => (
               <SelectTime
-                time={item}
+                key={t}
+                time={t}
                 pickedTime={pickedTime}
-                selectedTime={() => setPickedTime(item)}
+                selectedTime={() => setPickedTime(t)}
               />
-            )}
-          />
-          <View style={styles.barber__wrapper}>
-            <View style={styles.barber__title}>
-              <Text style={styles.header__text}>Выбор мастера</Text>
-            </View>
-              <FlatList
-                data={barbers}
-                horizontal
-                  contentContainerStyle={styles.barber__list}
-
-                renderItem={({ item }) => (
-                  <SelectBarber
-                    id={item.id}
-                    image={item.image}
-                    name={item.name}
-                    pickedBarberId={pickedBarber?.id}
-                    
-
-                    pickBarber={() => setPickedBarber(item)}
-                  />
-                )}
-              />
-         
+            ))}
           </View>
+
+          <Text style={styles.header__text}>Выбор мастера</Text>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.barber__list}
+          >
+            {barbers.map((item) => (
+              <SelectBarber
+                key={item.id}
+                id={item.id}
+                image={item.image}
+                name={item.name}
+                pickedBarberId={pickedBarber?.id}
+                pickBarber={() => setPickedBarber(item)}
+              />
+            ))}
+          </ScrollView>
         </View>
-      </View>
-      <View></View>
+
+        <View style={styles.confirmButton}>
+
+
+        <Button title="Подтвердить" onPress={() => console.log("OK")} />
+        </View>
+
+      </ScrollView>
     </SafeAreaView>
   );
 }
+
 
 const styles = StyleSheet.create({
   container: {
     marginTop: 20,
     marginHorizontal: 20,
+    flex:1
   },
+ 
   header__text: {
     fontFamily: "FiraSans-SemiBold",
     fontSize: Fonts.f17,
@@ -166,8 +169,11 @@ const styles = StyleSheet.create({
   barber__title: {},
   barber__list:{
     flexDirection:'row',
-    gap:15,
+    gap:20,
     paddingVertical:10,
+  },
+  confirmButton:{
+    marginTop:20,
   }
 
 });
