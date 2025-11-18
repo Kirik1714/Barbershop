@@ -41,19 +41,19 @@ const DATA=[
 
 
 
-interface ExampleState {
+interface ServicesSlice {
   count: number;
   DATA:Service[],
 }
 
 
-const initialState: ExampleState = {
+const initialState: ServicesSlice = {
   count: 0,
   DATA:DATA,
 };
 
-const exampleSlice = createSlice({
-  name: "example",
+const ServicesSlice = createSlice({
+  name: "services",
   initialState,
   reducers: {
     increment(state) {
@@ -68,5 +68,5 @@ const exampleSlice = createSlice({
   },
 });
 
-export const { increment, decrement, setCount } = exampleSlice.actions;
-export default exampleSlice.reducer;
+export const { increment, decrement, setCount } = ServicesSlice.actions;
+export default ServicesSlice.reducer;

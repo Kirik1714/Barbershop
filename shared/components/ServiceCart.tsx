@@ -24,7 +24,7 @@ export default function ServiceCart({name,time,price,}:ServiceCartProps) {
             <Text style={styles.nameText}>{name}</Text>
           </View>
           <View style={styles.descriptions__options__otherInfo}>
-            <Text style={styles.price}>{price}$</Text>
+            <Text style={styles.price}>{price} $</Text>
             <Text style={styles.time}>{time}</Text>
           </View>
         </View>

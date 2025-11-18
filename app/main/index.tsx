@@ -3,13 +3,16 @@ import SearchBar from "@/shared/components/SearchBar";
 import ServiceCart from "@/shared/components/ServiceCart";
 import { Colors, Fonts } from "@/shared/tokens";
 import { RootState } from "@/store/store";
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import {  ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlashList } from "@shopify/flash-list";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";
 
 export default function MainScreen() {
   const countServices = 11;
-  const services = useSelector((state: RootState) => state.example.DATA);
+  const services = useSelector((state: RootState) => state.services.DATA);
+  const masters = useSelector((state: RootState) => state.masters.DATA);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -25,9 +28,9 @@ export default function MainScreen() {
             <Text style={styles.services__desciption__other}>См. все</Text>
           </View>
           <View style={styles.services__container__list}>
-            <FlatList
-              data={services}
-         contentContainerStyle={styles.services__list}
+            <FlashList
+              data={services.slice(0, 4)}
+              contentContainerStyle={styles.services__list}
               renderItem={({ item }) => (
                 <ServiceCart
                   name={item.name}
@@ -45,9 +48,15 @@ export default function MainScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.barbers_list}
           >
-            <BarberCart />
-            <BarberCart />
-            <BarberCart />
+            {masters.slice(0,4).map((item) => (
+              <BarberCart
+                key={item.id}
+                image={item.image}
+                name={item.name}
+                specialisation={item.specialisation}
+                id={item.id}
+              />
+            ))}
           </ScrollView>
         </View>
       </ScrollView>
@@ -64,7 +73,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
   services: {},
-  services__container__list:{},
+  services__container__list: {},
   services__list: {
     gap: 15,
   },
@@ -93,6 +102,6 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   barbers_list: {
-    gap: 20,
+    gap: 15,
   },
 });

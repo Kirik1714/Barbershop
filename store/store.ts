@@ -1,9 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
-import exampleReducer from "./slices/exampleSlice";
+import ServicesSlice from "./slices/ServicesSlice";
+import MastersSlices from "./slices/MastersSlices";
+
 
 export const store = configureStore({
   reducer: {
-    example: exampleReducer,
+    services: ServicesSlice,
+    masters:MastersSlices
   },
 });
 
