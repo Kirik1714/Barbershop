@@ -4,6 +4,8 @@ import { StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useEffect } from "react";
+import { Provider } from "react-redux";
+import { store } from "@/store/store";
 
 SplashScreen.preventAutoHideAsync(); 
 
@@ -25,6 +27,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
+      <Provider store={store}>
       
       <View style={styles.container}>
       <Stack
@@ -38,6 +41,7 @@ export default function RootLayout() {
 
       </Stack>
       </View>
+      </Provider>
     </SafeAreaProvider>
   );
 }

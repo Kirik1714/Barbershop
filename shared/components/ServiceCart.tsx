@@ -3,8 +3,11 @@ import { Colors, Fonts } from "../tokens";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { useRouter } from "expo-router";
 import { useState } from "react";
+import { Service } from "@/types/services";
 
-export default function ServiceCart() {
+type ServiceCartProps =Pick<Service,'name'|'time'|'price'>
+
+export default function ServiceCart({name,time,price,}:ServiceCartProps) {
   const router = useRouter();
   const id = 1;
   const [pressed, setPressed] = useState(false);
@@ -18,11 +21,11 @@ export default function ServiceCart() {
         />
         <View style={styles.descriptions__options}>
           <View style={styles.descriptions__options__name}>
-            <Text style={styles.nameText}>Мужская стрижка</Text>
+            <Text style={styles.nameText}>{name}</Text>
           </View>
           <View style={styles.descriptions__options__otherInfo}>
-            <Text style={styles.price}>100 $</Text>
-            <Text style={styles.time}>30 мин - 60 мин</Text>
+            <Text style={styles.price}>{price}$</Text>
+            <Text style={styles.time}>{time}</Text>
           </View>
         </View>
         <TouchableOpacity
