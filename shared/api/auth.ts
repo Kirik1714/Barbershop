@@ -1,0 +1,18 @@
+import axios from "axios";
+import { RegisterPayload, } from "../../types/auth";
+
+const API_URL = "http://10.0.2.2:3000"; 
+
+
+export const registerRequest = async (data: RegisterPayload) => {
+ 
+  return axios
+    .post(`${API_URL}/users/registration`, data)
+    .then(res => {
+      return res;
+    })
+    .catch(err => {
+      console.log("Ошибка запроса:", err.message, err.response?.data);
+      throw err;
+    });
+};

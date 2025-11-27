@@ -2,23 +2,53 @@ import Logo from "@/assets/images/Logo";
 import Button from "@/shared/components/Button";
 import Input from "@/shared/components/Input";
 import { Colors } from "@/shared/tokens";
-import { Link } from "expo-router";
-import { useState } from "react";
+import { registerUser } from "@/store/slices/AuthSlices";
+import { AppDispatch, RootState } from "@/store/store";
+import { Link, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
-  Text,
+  
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Registration() {
+  const dispatch =useDispatch<AppDispatch>();
+  const router = useRouter();
+
+  const { loading, error,token  } = useSelector((state: RootState) => state.auth);
+
   const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
+
   const [password, setPassword] = useState<string>("");
   const [confirmedPassword, setConfirmedPassword] = useState<string>("");
+
+  const handleRegistration=()=>{
+    if (!name || !email || !password || !confirmedPassword) {
+      Alert.alert("Ошибка", "Пожалуйста, заполните все поля");
+      return;
+    }
+
+    if (password !== confirmedPassword) {
+      Alert.alert("Ошибка", "Пароли не совпадают");
+      return;
+    }
+        dispatch(registerUser({ name, email, password } ));
+
+  }
+  useEffect(()=>{
+        if (token) {
+    router.replace("/main");
+  }
+  },[token])
 
   return (
     <KeyboardAvoidingView
@@ -33,9 +63,9 @@ export default function Registration() {
             <View style={styles.form}>
               <View style={styles.inputs}>
                 <Input
-                  value={email}
+                  value={name}
                   placeholder="Имя"
-                  onChangeText={setEmail}
+                  onChangeText={setName}
                 />
                   <Input
                   value={email}
@@ -59,8 +89,9 @@ export default function Registration() {
               </View>
 
               <Button
-                title="Зарегистрироваться"
-                onPress={() => console.log("/Registration")}
+                title={loading ? "Регистрация..." : "Зарегистрироваться"}
+                onPress={handleRegistration}
+                // disabled={loading}
               />
             </View>
 
