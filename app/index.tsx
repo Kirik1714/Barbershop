@@ -2,10 +2,10 @@ import Logo from "@/assets/images/Logo";
 import Input from "@/shared/components/Input";
 import { Colors } from "@/shared/tokens";
 import { Link, useRouter } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "@/shared/components/Button";
 import {
-  
+  Alert,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -14,47 +14,65 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { loadUserFromStorage, loginUser } from "@/store/slices/AuthSlices";
 
 export default function Login() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { token } = useSelector((state: RootState) => state.auth);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const handleRegistration = () => {
+    if (!email || !password) {
+      Alert.alert("Ошибка", "Пожалуйста, заполните все поля");
+      return;
+    }
+    dispatch(loginUser({email,password}))
+  };
+  useEffect(() => {
+    dispatch(loadUserFromStorage());
+  }, []);
+
+  // Авто-редирект если есть токен
+  useEffect(() => {
+    if (token) {
+      router.replace("/main");
+    }
+  }, [token]);
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : undefined}
-        style={{ flex: 1 }}
-
+      style={{ flex: 1 }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView edges={['bottom', 'left', 'right',]}style={{ flex: 1,  justifyContent: 'center' }} >
-            
-          <Logo  />
+        <SafeAreaView
+          edges={["bottom", "left", "right"]}
+          style={{ flex: 1, justifyContent: "center" }}
+        >
+          <Logo />
           <View style={styles.container}>
             <View style={styles.form}>
               <View style={styles.inputs}>
-           
-             
-               
-                 <Input
+                <Input
                   value={email}
-                  placeholder="Логин"
+                  placeholder="Почта"
                   onChangeText={setEmail}
                 />
-                
-                
+
                 <Input
                   value={password}
                   placeholder="Пароль"
                   onChangeText={setPassword}
                   secureTextEntry
                 />
-                
               </View>
 
               <Button
                 title="Войти"
-                onPress={() => router.push("/Registration")}
+                onPress={handleRegistration}
               />
             </View>
             <View style={styles.variousSignIn}>
@@ -70,8 +88,7 @@ export default function Login() {
               </View>
             </View>
           </View>
-
-        </SafeAreaView >
+        </SafeAreaView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
@@ -79,7 +96,7 @@ export default function Login() {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center' ,
+    justifyContent: "center",
     paddingHorizontal: 55,
     gap: 40,
   },
@@ -87,7 +104,6 @@ const styles = StyleSheet.create({
     gap: 25,
   },
   form: {
-
     gap: 35,
   },
   variousSignIn: {
