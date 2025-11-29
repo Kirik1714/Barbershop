@@ -5,19 +5,26 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Service } from "@/types/services";
 
-type ServiceCartProps =Pick<Service,'title'|'durationMinutes'|'price'>
+type ServiceCartProps =Pick<Service,'title'|'durationMinutes'|'price'|'photoUrl'>
 
-export default function ServiceCart({title,durationMinutes,price,}:ServiceCartProps) {
+export default function ServiceCart({title,durationMinutes,price,photoUrl}:ServiceCartProps) {
   const router = useRouter();
   const id = 1;
   const [pressed, setPressed] = useState(false);
+  console.log(photoUrl);
+  
 
   return (
     <View style={styles.service}>
       <View style={styles.service__descriptions}>
         <Image
           style={styles.img}
-          source={require("../../assets/images/male.png")}
+         source={
+    photoUrl
+      ? { uri: `http://10.0.2.2:3000${photoUrl}` } 
+      : require("../../assets/images/noImage.png") 
+  }
+
         />
         <View style={styles.descriptions__options}>
           <View style={styles.descriptions__options__name}>

@@ -1,9 +1,9 @@
 import axios from "axios";
 const API_URL = "http://10.0.2.2:3000";
 
-export const getAllServicesRequest = async () => {
+export const getAllMasterRequest = async () => {
   return axios
-    .get(`${API_URL}/services/`)
+    .get(`${API_URL}/users/`)
     .then((res) => {
 
         

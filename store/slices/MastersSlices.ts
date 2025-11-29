@@ -1,50 +1,57 @@
-import { Master } from "@/types/master";
-import { createSlice } from "@reduxjs/toolkit";
+import { getAllMasterRequest } from "@/shared/api/master";
+import { User } from "@/types/user";
 
-const DATA:Master[]=[
-  {
-    "id": 1,
-    "name": "Алексей",
-    "specialisation": "Мужские стрижки",
-    "image": "barber1.png"
-  },
-  {
-    "id": 2,
-    "name": "Марина",
-    "specialisation": "Женские стрижки",
-    "image": "barber2.png"
-  },
-  {
-    "id": 3,
-    "name": "Игорь",
-    "specialisation": "Стрижка бороды",
-    "image": "barber3.png"
-  },
-  {
-    "id": 4,
-    "name": "Светлана",
-    "specialisation": "Окрашивание волос",
-    "image": "barber4.png"
-  },
-  {
-    "id": 5,
-    "name": "Дмитрий",
-    "specialisation": "Моделирование причесок",
-    "image": "barber5.png"
-  }
-]
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+interface MastersState {
+  count: number;
+  masters: User[] | null;
+  loading: boolean;
+  error: string | null;
+}
 
-const initialState= {
-  DATA:DATA,
-  
+const initialState: MastersState = {
+  masters: null,
+  count: 0,
+  loading: false,
+  error: null,
 };
 
+
+export const getAllMaster =createAsyncThunk(
+  "user/getAllMaster",
+  async(_,thunkAPI)=>{
+    try {
+      const masters = await getAllMasterRequest()
+      return masters.data
+    } catch (error:any) {
+       console.log("Ошибка запроса getAllMaster:", error);
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Error");
+    }
+  }
+)
 const MastersSlices = createSlice({
   name: "masters",
   initialState,
-  reducers: {
-  },
+  reducers: {},
+
+  extraReducers:(builder)=>{
+//getAllMaster
+        builder.addCase(getAllMaster.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        });
+        builder.addCase(getAllMaster.fulfilled, (state, action) => {
+          state.loading = false;
+          state.masters = action.payload.data;
+          state.count = action.payload.length || 0;
+
+        });
+        builder.addCase(getAllMaster.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload as string;
+        });
+  }
 });
 
 // export const { } = ServicesSlice.actions;

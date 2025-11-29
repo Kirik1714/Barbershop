@@ -10,15 +10,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getAllServives } from "@/store/slices/ServicesSlice";
+import { getAllMaster } from "@/store/slices/MastersSlices";
 
 export default function MainScreen() {
   const countServices = 11;
   const services = useSelector((state: RootState) => state.services.services);
-  const masters = useSelector((state: RootState) => state.masters.DATA);
+  const masters = useSelector((state: RootState) => state.masters.masters);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(getAllServives());
+    dispatch(getAllMaster())
+    
   }, []);
   return (
     <SafeAreaView style={styles.container}>
@@ -41,9 +44,10 @@ export default function MainScreen() {
               ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
               renderItem={({ item }) => (
                 <ServiceCart
-                  title={item.title} // вместо item.name
+                  title={item.title} 
                   price={item.price}
-                  durationMinutes={item.durationMinutes} // вместо item.time
+                  durationMinutes={item.durationMinutes} 
+                  photoUrl = {item.photoUrl}
                 />
               )}
             />
@@ -56,10 +60,10 @@ export default function MainScreen() {
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.barbers_list}
           >
-            {masters.slice(0, 4).map((item) => (
+            {masters?.slice(0, 4).map((item) => (
               <BarberCart
                 key={item.id}
-                image={item.image}
+                photoUrl={item.photoUrl}
                 name={item.name}
                 specialisation={item.specialisation}
                 id={item.id}

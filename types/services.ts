@@ -3,5 +3,5 @@ export interface Service{
     title: string;
     price: number;
     durationMinutes: string;
-    image: string;
+    photoUrl: string;
 }

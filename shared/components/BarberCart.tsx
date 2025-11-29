@@ -1,14 +1,16 @@
+import { User } from "@/types/user";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Colors, Fonts } from "../tokens";
-import { Master } from "@/types/master";
 
-export default function BarberCart({id,name,image,specialisation}:Master ) {
+export default function BarberCart({id,name,photoUrl,specialisation}:User ) {
+  console.log(photoUrl);
+  
   return (
     <View style={styles.barber}>
       <View style={styles.barber__container}>
         <Image
           style={styles.barber_img}
-          source={require("../../assets/images/barber1.png")}
+          source={photoUrl?{uri:`http://10.0.2.2:3000${photoUrl}`} :require("../../assets/images/barber1.png")}
         />
         <View style={styles.barber__description}>
           <Text style={styles.barber__name}>{name}</Text>

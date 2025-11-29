@@ -34,6 +34,7 @@ export default function Login() {
   };
   useEffect(() => {
     dispatch(loadUserFromStorage());
+
   }, []);
 
   // Авто-редирект если есть токен

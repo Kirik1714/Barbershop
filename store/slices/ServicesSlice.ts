@@ -10,7 +10,7 @@ interface ServicesState {
   count: number;
   services:Service[] | null,
   loading: boolean,
-  error: string | null; // добавим для ошибок
+  error: string | null;
 
 }
 
@@ -19,7 +19,6 @@ export const getAllServives = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const res = await getAllServicesRequest();
-      console.log(res);
       return res.data; 
       
     } catch (error: any) {
