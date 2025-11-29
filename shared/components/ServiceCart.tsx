@@ -5,9 +5,9 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Service } from "@/types/services";
 
-type ServiceCartProps =Pick<Service,'name'|'time'|'price'>
+type ServiceCartProps =Pick<Service,'title'|'durationMinutes'|'price'>
 
-export default function ServiceCart({name,time,price,}:ServiceCartProps) {
+export default function ServiceCart({title,durationMinutes,price,}:ServiceCartProps) {
   const router = useRouter();
   const id = 1;
   const [pressed, setPressed] = useState(false);
@@ -21,11 +21,11 @@ export default function ServiceCart({name,time,price,}:ServiceCartProps) {
         />
         <View style={styles.descriptions__options}>
           <View style={styles.descriptions__options__name}>
-            <Text style={styles.nameText}>{name}</Text>
+            <Text style={styles.nameText}>{title}</Text>
           </View>
           <View style={styles.descriptions__options__otherInfo}>
             <Text style={styles.price}>{price} $</Text>
-            <Text style={styles.time}>{time}</Text>
+            <Text style={styles.time}>{durationMinutes}</Text>
           </View>
         </View>
         <TouchableOpacity

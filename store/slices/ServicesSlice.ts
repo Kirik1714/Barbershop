@@ -1,72 +1,63 @@
+import { getAllServicesRequest } from "@/shared/api/services";
 import { Service } from "@/types/services";
-import { createSlice } from "@reduxjs/toolkit";
-
-const DATA=[
-  {
-    "id": 1,
-    "name": "Мужская стрижка",
-    "price": 100,
-    "time": "30 мин - 60 мин",
-    "image": "male.png"
-  },
-  {
-    "id": 2,
-    "name": "Женская стрижка",
-    "price": 150,
-    "time": "45 мин - 90 мин",
-    "image": "female.png"
-  },
-  {
-    "id": 3,
-    "name": "Детская стрижка",
-    "price": 70,
-    "time": "20 мин - 40 мин",
-    "image": "child.png"
-  },
-  {
-    "id": 4,
-    "name": "Бритьё бороды",
-    "price": 50,
-    "time": "20 мин - 30 мин",
-    "image": "beard.png"
-  },
-  {
-    "id": 5,
-    "name": "Укладка волос",
-    "price": 40,
-    "time": "15 мин - 30 мин",
-    "image": "style.png"
-  }
-]
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 
 
-interface ServicesSlice {
+
+
+interface ServicesState {
   count: number;
-  DATA:Service[],
+  services:Service[] | null,
+  loading: boolean,
+  error: string | null; // добавим для ошибок
+
 }
 
+export const getAllServives = createAsyncThunk(
+  "service/getAllServices",
+  async (_, thunkAPI) => {
+    try {
+      const res = await getAllServicesRequest();
+      console.log(res);
+      return res.data; 
+      
+    } catch (error: any) {
+      console.log("Ошибка запроса getAllServices:", error);
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Error");
+    }
+  }
+);
 
-const initialState: ServicesSlice = {
+const initialState: ServicesState = {
   count: 0,
-  DATA:DATA,
+  services:null,
+  loading:false,
+  error: null,
 };
 
 const ServicesSlice = createSlice({
   name: "services",
   initialState,
-  reducers: {
-    increment(state) {
-      state.count += 1;
-    },
-    decrement(state) {
-      state.count -= 1;
-    },
-    setCount(state, action) {
-      state.count = action.payload;
-    },
-  },
+  reducers:{},
+  extraReducers:(builder)=>{
+    //getAllServices
+        builder.addCase(getAllServives.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        });
+        builder.addCase(getAllServives.fulfilled, (state, action) => {
+          state.loading = false;
+          state.services = action.payload.data;
+          state.count = action.payload.length || 0;
+
+        });
+        builder.addCase(getAllServives.rejected, (state, action) => {
+          state.loading = false;
+          state.error = action.payload as string;
+        });
+  }
 });
 
-export const { increment, decrement, setCount } = ServicesSlice.actions;
+export const { } = ServicesSlice.actions;
 export default ServicesSlice.reducer;
