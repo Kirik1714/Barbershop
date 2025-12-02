@@ -48,7 +48,7 @@ const ServicesSlice = createSlice({
         builder.addCase(getAllServives.fulfilled, (state, action) => {
           state.loading = false;
           state.services = action.payload.data;
-          state.count = action.payload.length || 0;
+          state.count = action.payload.data.length || 0;
 
         });
         builder.addCase(getAllServives.rejected, (state, action) => {

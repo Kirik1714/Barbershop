@@ -11,18 +11,31 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getAllServives } from "@/store/slices/ServicesSlice";
 import { getAllMaster } from "@/store/slices/MastersSlices";
+import MemeLoader from "@/assets/images/MemeLoader";
 
 export default function MainScreen() {
-  const countServices = 11;
+  const countServices = useSelector((state: RootState) => state.services.count);
   const services = useSelector((state: RootState) => state.services.services);
   const masters = useSelector((state: RootState) => state.masters.masters);
+  const servicesLoading = useSelector(
+    (state: RootState) => state.services.loading
+  );
+  const mastersLoading = useSelector(
+    (state: RootState) => state.masters.loading
+  );
   const dispatch = useDispatch<AppDispatch>();
+
+  const isLoading = servicesLoading || mastersLoading;
 
   useEffect(() => {
     dispatch(getAllServives());
-    dispatch(getAllMaster())
-    
+    dispatch(getAllMaster());
   }, []);
+
+  if (isLoading) {
+    return <MemeLoader />;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -44,10 +57,10 @@ export default function MainScreen() {
               ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
               renderItem={({ item }) => (
                 <ServiceCart
-                  title={item.title} 
+                  title={item.title}
                   price={item.price}
-                  durationMinutes={item.durationMinutes} 
-                  photoUrl = {item.photoUrl}
+                  durationMinutes={item.durationMinutes}
+                  photoUrl={item.photoUrl}
                 />
               )}
             />
