@@ -2,6 +2,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import ServicesSlice from "./slices/ServicesSlice";
 import MastersSlices from "./slices/MastersSlices";
 import AuthSlices from './slices/AuthSlices'
+import AvailabilitySlice from './slices/AvailabilitySlice'
+
 
 
 
@@ -11,6 +13,7 @@ export const store = configureStore({
     services: ServicesSlice,
     masters:MastersSlices,
     auth:AuthSlices,
+    slot:AvailabilitySlice
   },
    devTools: true, 
 

@@ -3,7 +3,7 @@ import { Colors, Fonts } from "../tokens";
 
 interface SelectTimeProps {
   time: string;
-  pickedTime?: string; 
+  pickedTime?: string| null; 
   selectedTime: (time: string) => void;
 }
 

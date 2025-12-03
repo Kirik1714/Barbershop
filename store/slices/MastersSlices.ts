@@ -13,7 +13,7 @@ interface MastersState {
 const initialState: MastersState = {
   masters: null,
   count: 0,
-  loading: false,
+  loading: true,
   error: null,
 };
 
@@ -38,7 +38,7 @@ const MastersSlices = createSlice({
   extraReducers:(builder)=>{
 //getAllMaster
         builder.addCase(getAllMaster.pending, (state) => {
-          state.loading = true;
+          state.loading = false;
           state.error = null;
         });
         builder.addCase(getAllMaster.fulfilled, (state, action) => {

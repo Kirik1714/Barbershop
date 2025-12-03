@@ -1,23 +1,16 @@
-import { 
-  Image, 
-  ImageSourcePropType, 
-  StyleSheet, 
-  Text, 
-  TouchableOpacity 
-} from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Colors, Fonts } from "../tokens";
 
 interface SelectBarberProps {
-  id: string;
+  id: number;
+  photoUrl: string;
   name: string;
-  image: ImageSourcePropType;
-  pickedBarberId?: string;
-  pickBarber: (id: string) => void;
+  pickedBarberId?: number;
+  pickBarber: (barber: { id: number; name: string; photoUrl: string }) => void;
 }
-
 export default function SelectBarber({
   id,
-  image,
+  photoUrl,
   name,
   pickedBarberId,
   pickBarber,
@@ -26,10 +19,18 @@ export default function SelectBarber({
 
   return (
     <TouchableOpacity
-      onPress={() => pickBarber(id)}
+      onPress={() => pickBarber({ id, name, photoUrl })}
       style={[styles.card, isSelected && styles.cardSelected]}
     >
-      <Image source={image} style={styles.photo} />
+      <Image
+        source={
+          photoUrl
+            ? { uri: `http://10.0.2.2:3000${photoUrl}` }
+            : require("../../assets/images/barber1.png")
+        }
+        style={styles.photo}
+      />
+
       <Text style={[styles.name, isSelected && styles.nameSelected]}>
         {name}
       </Text>
@@ -45,7 +46,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
     paddingVertical: 10,
-  
   },
 
   cardSelected: {
