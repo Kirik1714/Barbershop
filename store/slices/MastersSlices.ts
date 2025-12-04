@@ -38,7 +38,7 @@ const MastersSlices = createSlice({
   extraReducers:(builder)=>{
 //getAllMaster
         builder.addCase(getAllMaster.pending, (state) => {
-          state.loading = false;
+          state.loading = true;
           state.error = null;
         });
         builder.addCase(getAllMaster.fulfilled, (state, action) => {

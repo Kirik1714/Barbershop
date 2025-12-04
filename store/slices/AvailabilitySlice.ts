@@ -16,12 +16,13 @@ const initialState: AvailabilityState = {
 export const getAvailability = createAsyncThunk(
   "availability/getAvailability",
   async (
-    payload: { serviceId: number; masterId: number; date: string },
+    payload: { serviceId: number; masterId: number; selectedDate: string },
     thunkAPI
   ) => {
     try {
-      const { serviceId, masterId, date } = payload;
-      const res = await getAvailabilityRequest(serviceId, masterId, date);
+      const { serviceId, masterId, selectedDate } = payload;
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      const res = await getAvailabilityRequest(serviceId, masterId, selectedDate);
      
       return res; 
     } catch (error: any) {
@@ -43,7 +44,8 @@ const availabilitySlice = createSlice({
       state.error = null;
     });
     builder.addCase(getAvailability.fulfilled, (state, action) => {
-      state.loading = false
+      
+    state.loading = false
     state.slots = action.payload?.slots || [];
     console.log( action.payload);
     

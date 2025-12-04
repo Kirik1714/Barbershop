@@ -1,37 +1,37 @@
 import { useEffect, useState } from "react";
 import { Dimensions, StyleSheet, View } from "react-native";
-import {
-  Calendar,
-  CalendarProvider,
-  ExpandableCalendar,
-} from "react-native-calendars";
+import { Calendar, CalendarProvider } from "react-native-calendars";
 import { Colors } from "../tokens";
 
-export default function SelectDateScreen() {
+export default function SelectDateScreen({
+  selectedDate,
+  setSelectedDate,
+}: {
+  selectedDate: string;
+  setSelectedDate: (date: string) => void;
+}) {
   const screenWidth = Dimensions.get("window").width;
   const horisontalPadding = 20 * 2;
   const calendarWidth = screenWidth - horisontalPadding;
-  const [selected,setSelected] = useState("");
 
-  useEffect(()=>{
-    const today = new Date().toISOString().split("T")[0];
-    setSelected(today)
-    
-  },[])
+  const today = new Date().toISOString().split("T")[0];
+  useEffect(() => {
+    setSelectedDate(today);
+  }, []);
+
   return (
     <View style={styles.container}>
       <CalendarProvider date={"2025-11-07"}>
-        <View style={{  alignSelf: "center" }}>
+        <View style={{ alignSelf: "center" }}>
           <Calendar
             firstDay={1}
             hideArrows={false}
             style={{
               width: calendarWidth,
             }}
-            onDayPress={(day) => setSelected(day.dateString)}
-
+            onDayPress={(day) => setSelectedDate(day.dateString)}
             markedDates={{
-              [selected]: {
+              [selectedDate]: {
                 selected: true,
                 selectedColor: Colors.primary,
                 selectedTextColor: Colors.white,
@@ -39,7 +39,7 @@ export default function SelectDateScreen() {
             }}
             theme={{
               backgroundColor: Colors.white,
-              calendarBackground:Colors.white,
+              calendarBackground: Colors.white,
               textSectionTitleColor: Colors.black,
               dayTextColor: Colors.black,
               todayTextColor: Colors.primary,
@@ -62,6 +62,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    
   },
 });

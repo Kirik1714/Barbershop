@@ -18,7 +18,10 @@ export const getAllServives = createAsyncThunk(
   "service/getAllServices",
   async (_, thunkAPI) => {
     try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
       const res = await getAllServicesRequest();
+      
       return res.data; 
       
     } catch (error: any) {

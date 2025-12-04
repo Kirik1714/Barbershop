@@ -1,5 +1,6 @@
 import { Image, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { Colors, Fonts } from "../tokens";
+import { useEffect } from "react";
 
 interface SelectBarberProps {
   id: number;
@@ -16,6 +17,7 @@ export default function SelectBarber({
   pickBarber,
 }: SelectBarberProps) {
   const isSelected = id === pickedBarberId;
+
 
   return (
     <TouchableOpacity
