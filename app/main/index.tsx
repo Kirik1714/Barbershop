@@ -57,6 +57,7 @@ export default function MainScreen() {
               ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
               renderItem={({ item }) => (
                 <ServiceCart
+                id={item.id}
                   title={item.title}
                   price={item.price}
                   durationMinutes={item.durationMinutes}

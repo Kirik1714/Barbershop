@@ -30,7 +30,7 @@ export const loginUser = createAsyncThunk(
       
       const res = await loginRequest(data);
       await AsyncStorage.setItem("token", res.data.token);
-      console.log(res.data);
+
       
       return res.data;
     } catch (error: any) {

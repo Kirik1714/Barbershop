@@ -23,12 +23,14 @@ export default function RootLayout() {
       SplashScreen.hideAsync()
     }
   },[loaded])
-
+if (!loaded) {
+    return null; 
+    // Альтернатива: return <View style={{ flex: 1, backgroundColor: 'white' }} />;
+  }
 
   return (
     <SafeAreaProvider>
       <Provider store={store}>
-      
       <View style={styles.container}>
       <Stack
         screenOptions={{
@@ -37,8 +39,6 @@ export default function RootLayout() {
       >
         <Stack.Screen name="index" />
         <Stack.Screen name="Registration" />
-
-
       </Stack>
       </View>
       </Provider>

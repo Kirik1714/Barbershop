@@ -5,3 +5,10 @@ export interface Service{
     durationMinutes: string;
     photoUrl: string;
 }
+export interface Order {
+  masterName: string;
+  serviceName: string;
+  date: string;
+  time: string;
+  servicePrice: number;
+}

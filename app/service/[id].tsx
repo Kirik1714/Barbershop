@@ -9,7 +9,6 @@ import { Fonts } from "@/shared/tokens";
 import { getAvailability } from "@/store/slices/AvailabilitySlice";
 import { acceptOrder } from "@/store/slices/CartSlices";
 import { AppDispatch, RootState } from "@/store/store";
-import { format } from "date-fns";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
@@ -35,8 +34,10 @@ export default function Appointment() {
   const loaderMasters = useSelector(
     (state: RootState) => state.masters.loading
   );
-
+  const serviceTitle = params.title as string;
   const serviceId = Number(params.id);
+  const servicePrice = Number(params.price);
+
   const [selectedDate, setSelectedDate] = useState<string>("");
   useEffect(() => {
     if (slots.length > 0 && !pickedTime) {
@@ -78,9 +79,10 @@ export default function Appointment() {
     dispatch(
       acceptOrder({
         masterName: pickedBarber?.name,
-        serviceName: "Cтрижка",
+        serviceName: serviceTitle ,
         date: selectedDate,
         time: pickedTime,
+        servicePrice:servicePrice
       })
     );
       router.replace("/main/cart");

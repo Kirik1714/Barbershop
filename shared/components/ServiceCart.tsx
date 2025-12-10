@@ -5,14 +5,12 @@ import { useRouter } from "expo-router";
 import { useState } from "react";
 import { Service } from "@/types/services";
 
-type ServiceCartProps =Pick<Service,'title'|'durationMinutes'|'price'|'photoUrl'>
+type ServiceCartProps =Pick<Service,'id'|'title'|'durationMinutes'|'price'|'photoUrl'>
 
-export default function ServiceCart({title,durationMinutes,price,photoUrl}:ServiceCartProps) {
+export default function ServiceCart({id,title,durationMinutes,price,photoUrl}:ServiceCartProps) {
   const router = useRouter();
-  const id = 1;
   const [pressed, setPressed] = useState(false);
   console.log(photoUrl);
-  
 
   return (
     <View style={styles.service}>
@@ -39,7 +37,13 @@ export default function ServiceCart({title,durationMinutes,price,photoUrl}:Servi
           style={styles.make_an_appointment}
           onPressIn={() => setPressed(true)}
           onPressOut={() => setPressed(false)}
-          onPress={() => router.push(`/service/${id}`)}
+          onPress={() => router.push({
+            pathname:`/service/${id}` as any,
+            params:{
+              title,
+              price,
+            }
+          })}
         >
           <FontAwesome6
             name="add"

@@ -17,6 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { loadUserFromStorage, loginUser } from "@/store/slices/AuthSlices";
+import { loadBasketFromStorage } from "@/store/slices/CartSlices";
 
 export default function Login() {
   const router = useRouter();
@@ -34,10 +35,10 @@ export default function Login() {
   };
   useEffect(() => {
     dispatch(loadUserFromStorage());
+    dispatch(loadBasketFromStorage())
 
   }, []);
 
-  // Авто-редирект если есть токен
   useEffect(() => {
     if (token) {
       router.replace("/main");
