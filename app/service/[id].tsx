@@ -23,7 +23,7 @@ interface SelectBarberProps {
 
 export default function Appointment() {
   const dispatch = useDispatch<AppDispatch>();
-  const router =useRouter()
+  const router = useRouter();
   const params = useLocalSearchParams();
   const [pickedTime, setPickedTime] = useState<string | null>(null);
   const [pickedBarber, setPickedBarber] = useState<SelectBarberProps>();
@@ -71,21 +71,21 @@ export default function Appointment() {
   }, [pickedBarber, masters, serviceId, selectedDate]);
 
   const handleAppointment = () => {
-
     if (!pickedBarber || !pickedTime || !selectedDate) {
-        console.log("Не все данные для записи выбраны.");
-        return; 
+      console.log("Не все данные для записи выбраны.");
+      return;
     }
     dispatch(
       acceptOrder({
+        id: serviceId,
         masterName: pickedBarber?.name,
-        serviceName: serviceTitle ,
+        serviceName: serviceTitle,
         date: selectedDate,
         time: pickedTime,
-        servicePrice:servicePrice
+        servicePrice: servicePrice,
       })
     );
-      router.replace("/main/cart");
+    router.replace( "/main/cart" );
   };
 
   return (

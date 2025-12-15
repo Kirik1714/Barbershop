@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { loadUserFromStorage, loginUser } from "@/store/slices/AuthSlices";
 import { loadBasketFromStorage } from "@/store/slices/CartSlices";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
   const router = useRouter();
@@ -38,6 +39,21 @@ export default function Login() {
     dispatch(loadBasketFromStorage())
 
   }, []);
+//  useEffect(() => {
+//         const resetBasketKey = async () => {
+//             try {
+//                 await AsyncStorage.removeItem("basket");
+
+//             } catch (e) {
+//                 console.error('Failed to reset basket key:', e);
+//             }
+//         };
+
+//         resetBasketKey();
+        
+
+//     }, []);
+
 
   useEffect(() => {
     if (token) {

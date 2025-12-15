@@ -6,9 +6,11 @@ export interface Service{
     photoUrl: string;
 }
 export interface Order {
+  id: number,
   masterName: string;
   serviceName: string;
   date: string;
   time: string;
   servicePrice: number;
+  basketItemId:string,
 }

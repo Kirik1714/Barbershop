@@ -1,18 +1,28 @@
 import { Order } from "@/types/services";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Colors, Fonts } from "../tokens";
+import { useEffect } from "react";
+
+interface BasketCartProps extends Order{
+  basketItemId:string,
+  handleRemoveButton: (id: string ) => void;
+}
 
 export default function BasketCart({
+  id,
   serviceName,
   masterName,
   servicePrice,
   time,
   date,
-}: Order) {
+  basketItemId,
+  handleRemoveButton,
+
+}: BasketCartProps) {
   return (
     <View style={styles.container}>
       <View style={styles.block__info}>
@@ -43,7 +53,11 @@ export default function BasketCart({
           </View>
         </View>
         <View style={styles.icon__remove}>
-          <Ionicons name="bag-remove-outline" size={30} color="red" />
+          <Pressable onPress={()=>{
+  
+            handleRemoveButton(basketItemId)}}>
+            <Ionicons name="bag-remove-outline" size={30} color="red" />
+          </Pressable>
         </View>
       </View>
       <Text style={styles.block__price}>{servicePrice} $</Text>
@@ -62,11 +76,10 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.10, 
+    shadowOpacity: 0.1,
     shadowRadius: 6.84,
 
-
-    elevation: 4, 
+    elevation: 4,
   },
   block__info: {
     flexDirection: "row",
@@ -75,14 +88,13 @@ const styles = StyleSheet.create({
     fontFamily: "FiraSansSemiBold",
     fontSize: Fonts.f23,
 
-    marginLeft: 'auto'
-    
+    marginLeft: "auto",
   },
   icon__scissors: {
     marginRight: 20,
   },
   description: {
-    gap:7,
+    gap: 7,
   },
   service__title: {
     fontFamily: "FiraSans-Regular",
@@ -101,14 +113,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 7,
-    backgroundColor:Colors.milk,
-    padding:15,
-    borderRadius:10,
+    backgroundColor: Colors.milk,
+    padding: 15,
+    borderRadius: 10,
   },
   icon__calendar: {},
   date: {},
   icon__time: {},
   time: {},
-  icon__remove: { marginLeft: 'auto' },
- 
+  icon__remove: { marginLeft: "auto" },
 });

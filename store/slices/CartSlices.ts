@@ -1,6 +1,7 @@
 import { Order } from "@/types/services";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { nanoid } from '@reduxjs/toolkit';
 
 
 
@@ -31,13 +32,23 @@ const saveBasketToStorage = async (basket: Order[]) => {
   }
 };
 
+
 const CartSlices = createSlice({
   name: "cartSlices",
   initialState,
   reducers: {
     acceptOrder(state, action: PayloadAction<Order>) {
-      state.basket = [...state.basket, action.payload];
+      const newBasketItem = {
+        ...action.payload,
+        basketItemId: nanoid(), 
+    };
+      state.basket = [...state.basket, newBasketItem];
       saveBasketToStorage(state.basket);
+    },
+    removeFromBasket(state,action:PayloadAction<string>){
+      state.basket=state.basket.filter((item)=>item.basketItemId !==action.payload)
+
+
     },
     loadBasket(state, action: PayloadAction<Order[]>) {
       state.basket = action.payload;
@@ -45,11 +56,11 @@ const CartSlices = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadBasketFromStorage.fulfilled, (state, action) => {
+    builder.addCase(loadBasketFromStorage.fulfilled, (state, action: PayloadAction<Order[]>) => {
       state.basket = action.payload;
     });
   },
 });
 
-export const { acceptOrder, loadBasket } = CartSlices.actions;
+export const { acceptOrder, loadBasket,removeFromBasket } = CartSlices.actions;
 export default CartSlices.reducer;

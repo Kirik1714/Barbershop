@@ -4,6 +4,7 @@ import MastersSlices from "./slices/MastersSlices";
 import AuthSlices from './slices/AuthSlices'
 import AvailabilitySlice from './slices/AvailabilitySlice'
 import CartSlices from './slices/CartSlices'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -24,11 +25,7 @@ export const store = configureStore({
 });
 store.subscribe(() => {
   const token = store.getState().auth.token;
-  console.log('Current token:', token);
-
-
-
-  console.log('Current token:', token);
+ 
 
 
 });
