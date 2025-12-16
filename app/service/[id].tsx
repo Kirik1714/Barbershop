@@ -7,7 +7,7 @@ import SelectDateScreen from "@/shared/components/SelectDateScreen";
 import SelectTime from "@/shared/components/SelectTime";
 import { Fonts } from "@/shared/tokens";
 import { getAvailability } from "@/store/slices/AvailabilitySlice";
-import { acceptOrder } from "@/store/slices/CartSlices";
+import { reserveAndAcceptOrder } from "@/store/slices/CartSlices";
 import { AppDispatch, RootState } from "@/store/store";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -70,22 +70,34 @@ export default function Appointment() {
     );
   }, [pickedBarber, masters, serviceId, selectedDate]);
 
-  const handleAppointment = () => {
-    if (!pickedBarber || !pickedTime || !selectedDate) {
-      console.log("Не все данные для записи выбраны.");
-      return;
-    }
-    dispatch(
-      acceptOrder({
-        id: serviceId,
-        masterName: pickedBarber?.name,
-        serviceName: serviceTitle,
-        date: selectedDate,
-        time: pickedTime,
-        servicePrice: servicePrice,
-      })
-    );
-    router.replace( "/main/cart" );
+  const handleAppointment = async () => {
+ if (!pickedBarber || !pickedTime || !selectedDate) {
+            console.log("Не все данные для записи выбраны.");
+            return;
+        }
+        const payload = {
+            id: serviceId, 
+            masterId: pickedBarber.id, 
+            masterName: pickedBarber?.name,
+            serviceName: serviceTitle,
+            date: selectedDate,
+            time: pickedTime,
+            servicePrice: servicePrice,
+        };
+   const resultAction = await dispatch(reserveAndAcceptOrder(payload)); 
+
+if (reserveAndAcceptOrder.fulfilled.match(resultAction)) {
+  
+            router.replace("/main/cart");
+        } else if (reserveAndAcceptOrder.rejected.match(resultAction)) {
+  
+            const errorMessage = (resultAction.payload || "Неизвестная ошибка резервирования.") as string;
+            
+            console.error("Ошибка при резервировании слота:", errorMessage);
+            alert(`Ошибка бронирования: ${errorMessage}`);
+        }
+
+    
   };
 
   return (

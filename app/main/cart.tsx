@@ -5,18 +5,24 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollView } from "react-native";
 import { Colors } from "@/shared/tokens";
-import { removeFromBasket } from "@/store/slices/CartSlices";
+import { unreserveAndRemoveOrder } from "@/store/slices/CartSlices";
 
 export default function Cart() {
   const basket = useSelector((state: RootState) => state.basket.basket);
   const totalAmount = basket.reduce((sum, item) => sum + item.servicePrice, 0);
-  const dispatch= useDispatch<AppDispatch>();
+  const dispatch = useDispatch<AppDispatch>();
   console.log(basket);
-  
 
-  const handleRemoveButton = (id: string) => {
-    
-    dispatch(removeFromBasket(id))
+  const handleRemoveButton = (basketItemId: string) => {
+    const itemToRemove = basket.find(
+      (item) => item.basketItemId === basketItemId
+    );
+
+    if (itemToRemove) {
+      dispatch(unreserveAndRemoveOrder(itemToRemove));
+    } else {
+      console.error("Item not found in basket:", basketItemId);
+    }
   };
 
   return (
@@ -41,6 +47,7 @@ export default function Cart() {
               time={item.time}
               basketItemId={item.basketItemId}
               handleRemoveButton={handleRemoveButton}
+              masterId={item.masterId}
             />
           ))
         )}
