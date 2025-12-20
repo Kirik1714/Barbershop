@@ -1,17 +1,17 @@
 import BasketCart from "@/shared/components/BasketCart";
 import { AppDispatch, RootState } from "@/store/store";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { ScrollView } from "react-native";
 import { Colors } from "@/shared/tokens";
-import { unreserveAndRemoveOrder } from "@/store/slices/CartSlices";
+import { makeAnAppointment, unreserveAndRemoveOrder } from "@/store/slices/CartSlices";
 
 export default function Cart() {
   const basket = useSelector((state: RootState) => state.basket.basket);
+  const loading = useSelector((state:RootState)=>state.basket.loading)
   const totalAmount = basket.reduce((sum, item) => sum + item.servicePrice, 0);
   const dispatch = useDispatch<AppDispatch>();
-  console.log(basket);
 
   const handleRemoveButton = (basketItemId: string) => {
     const itemToRemove = basket.find(
@@ -24,6 +24,16 @@ export default function Cart() {
       console.error("Item not found in basket:", basketItemId);
     }
   };
+
+  const handleMakeAnAppointment=async()=>{
+  try {
+      await dispatch(makeAnAppointment());
+      
+      Alert.alert("Успешно", "Ваша запись подтверждена!");
+    } catch (err: any) {
+      Alert.alert("Ошибка", err || "Не удалось оформить заказ");
+    }
+  }
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -57,10 +67,18 @@ export default function Cart() {
         <View style={styles.summaryBlock}>
           <View style={styles.totalRow}>
             <Text style={styles.totalText}>Итого ({basket.length} усл.):</Text>
-            <Text style={styles.totalPrice}>{totalAmount} ₽</Text>
+            <Text style={styles.totalPrice}>{totalAmount} BYN</Text>
           </View>
-          <TouchableOpacity style={styles.checkoutButton}>
-            <Text style={styles.checkoutButtonText}>Оформить заказ</Text>
+         <TouchableOpacity 
+            style={[styles.checkoutButton, loading && { opacity: 0.7 }]} // Слегка гасим кнопку при загрузке
+            onPress={handleMakeAnAppointment}
+            disabled={loading} // Блокируем кнопку во время запроса
+          >
+            {loading ? (
+              <ActivityIndicator color={Colors.white} /> // Показываем спиннер
+            ) : (
+              <Text style={styles.checkoutButtonText}>Оформить заказ</Text>
+            )}
           </TouchableOpacity>
         </View>
       )}

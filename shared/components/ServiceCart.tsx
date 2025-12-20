@@ -29,8 +29,8 @@ export default function ServiceCart({id,title,durationMinutes,price,photoUrl}:Se
             <Text style={styles.nameText}>{title}</Text>
           </View>
           <View style={styles.descriptions__options__otherInfo}>
-            <Text style={styles.price}>{price} $</Text>
-            <Text style={styles.time}>{durationMinutes}</Text>
+            <Text style={styles.price}>Цена: {price} BYN</Text>
+            <Text style={styles.time}>Время: {durationMinutes} мин</Text>
           </View>
         </View>
         <TouchableOpacity

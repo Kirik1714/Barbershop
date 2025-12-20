@@ -1,5 +1,6 @@
 import {
   createReservationRequest,
+  makeAnAppointmentRequest,
   removeReservationRequest,
 } from "@/shared/api/services";
 import {
@@ -10,8 +11,8 @@ import {
   
 } from "@/types/services";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { nanoid } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction ,nanoid} from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 interface cartState {
   loading: boolean;
@@ -24,14 +25,6 @@ const initialState: cartState = {
   basket: [],
   error: null,
 };
-
-export const loadBasketFromStorage = createAsyncThunk(
-  "basket/load",
-  async () => {
-    const data = await AsyncStorage.getItem("basket");
-    return data ? JSON.parse(data) : [];
-  }
-);
 const saveBasketToStorage = async (basket: Order[]) => {
   try {
     await AsyncStorage.setItem("basket", JSON.stringify(basket));
@@ -39,6 +32,14 @@ const saveBasketToStorage = async (basket: Order[]) => {
     console.error("Failed to save basket to storage", e);
   }
 };
+export const loadBasketFromStorage = createAsyncThunk(
+  "basket/load",
+  async () => {
+    const data = await AsyncStorage.getItem("basket");
+    return data ? JSON.parse(data) : [];
+  }
+);
+
 export const reserveAndAcceptOrder = createAsyncThunk(
   "cart/reserveAndAccept",
   async (payload: ReservationPayload, { dispatch, rejectWithValue }) => {
@@ -81,7 +82,6 @@ export const unreserveAndRemoveOrder = createAsyncThunk(
   "cart/unreserveAndRemove",
   async (payload: Order, { dispatch, rejectWithValue }) => {
     
-    // 1. АСИНХРОННО ИЗВЛЕКАЕМ ТОКЕН
     const userToken = await AsyncStorage.getItem("token");
 
     if (!userToken) {
@@ -89,17 +89,15 @@ export const unreserveAndRemoveOrder = createAsyncThunk(
     }
 
     try {
-      // 2. ФОРМИРУЕМ PAYLOAD ИЗ ДАННЫХ КОРЗИНЫ (Order)
       const apiPayload: RemoveReservationAPI = {
         masterId: payload.masterId,
         date: payload.date,
         time: payload.time,
       };
 
-      // 3. ВЫЗЫВАЕМ API-функцию, ПЕРЕДАВАЯ токен
+
       await removeReservationRequest(apiPayload, userToken);
       
-      // 4. Успешное удаление из Redux-корзины
       dispatch(CartSlices.actions._removeFromBasket(payload.basketItemId)); 
       
     } catch (error: any) {
@@ -108,13 +106,31 @@ export const unreserveAndRemoveOrder = createAsyncThunk(
     }
   }
 );
+export const makeAnAppointment = createAsyncThunk("cart/makeAnAppointment",async(_,{getState,dispatch,rejectWithValue})=>{
+  try {
+    console.log('1. Thunk started'); // Добавьте этот лог
+    const state =getState() as RootState;
+  const items = state.basket.basket;
+    const userToken = await AsyncStorage.getItem('token');
+  console.log('2. Items from state:', items.length);
+    if (!userToken) return rejectWithValue("Авторизуйтесь для оформления");
+    if (items.length === 0) return rejectWithValue("Корзина пуста");
+
+    await makeAnAppointmentRequest(items,userToken);
+    console.log('_____---3')
+    dispatch(CartSlices.actions._clearBasket());
+
+  } catch (error:any) {
+    return rejectWithValue(error.response?.data?.message || "Ошибка оформления");
+  }
+
+})
 
 const CartSlices = createSlice({
   name: "cartSlices",
   initialState,
   reducers: {
     _acceptOrder(state, action: PayloadAction<Order>) {
-      // Принимает готовый объект Order с basketItemId
       state.basket = [...state.basket, action.payload];
       saveBasketToStorage(state.basket);
     },
@@ -124,6 +140,10 @@ const CartSlices = createSlice({
         (item) => item.basketItemId !== action.payload
       );
       saveBasketToStorage(state.basket);
+    },
+    _clearBasket(state) {
+      state.basket = [];
+      AsyncStorage.removeItem("basket");
     },
     loadBasket(state, action: PayloadAction<Order[]>) {
       state.basket = action.payload;
@@ -138,7 +158,7 @@ const CartSlices = createSlice({
       }
     );
 
-    // 💡 Добавляем обработку состояния загрузки и ошибок для Thunks
+    // Добавляем обработку состояния загрузки и ошибок для Thunks
     builder.addCase(reserveAndAcceptOrder.pending, (state) => {
       state.loading = true;
       state.error = null;
@@ -149,6 +169,18 @@ const CartSlices = createSlice({
     builder.addCase(reserveAndAcceptOrder.rejected, (state, action) => {
       state.loading = false;
       state.error = (action.payload as string) || "Reservation failed";
+    });
+    // Оформление заказа 
+    builder.addCase(makeAnAppointment.pending,(state)=>{
+      state.loading = true;
+      state.error = null;
+    });
+     builder.addCase(makeAnAppointment.fulfilled,(state)=>{
+      state.loading = false;
+    });
+      builder.addCase(makeAnAppointment.rejected,(state,action)=>{
+      state.loading = false;
+      state.error = action.payload as string;
     });
   },
 });

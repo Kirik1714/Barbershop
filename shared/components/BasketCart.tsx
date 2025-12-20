@@ -5,7 +5,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Colors, Fonts } from "../tokens";
-import { useEffect } from "react";
 
 interface BasketCartProps extends Order{
   basketItemId:string,
@@ -60,7 +59,7 @@ export default function BasketCart({
           </Pressable>
         </View>
       </View>
-      <Text style={styles.block__price}>{servicePrice} $</Text>
+      <Text style={styles.block__price}>{servicePrice} BYN</Text>
     </View>
   );
 }

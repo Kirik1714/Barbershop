@@ -1,4 +1,4 @@
-import { CreateReservationAPI, RemoveReservationAPI,  } from "@/types/services";
+import { CreateReservationAPI, Order, RemoveReservationAPI, } from "@/types/services";
 import axios from "axios";
 const API_URL = "http://10.0.2.2:3000";
 
@@ -28,7 +28,6 @@ export const createReservationRequest = async (
     
     return axios
         .post(`${API_URL}/services/reserve`, payload, {
-            // 💡 ГЛАВНОЕ ИСПРАВЛЕНИЕ: Передаем токен в заголовке Authorization
             headers: {
                 'Authorization': `Bearer ${token}` 
             }
@@ -44,18 +43,17 @@ export const createReservationRequest = async (
 
 export const removeReservationRequest = async (
     payload: RemoveReservationAPI, 
-    token: string // 🛑 ОБЯЗАТЕЛЬНЫЙ ПАРАМЕТР
+    token: string ,
 ) => {
     if (!token) {
         throw new Error("Authentication token is missing.");
     }
     
     return axios
-        // 💡 Маршрут для удаления, используем 'post' или 'delete'
-        // В вашем случае router.post('/unreserve') предполагает POST
+  
         .post(`${API_URL}/services/unreserve`, payload, {
             headers: {
-                'Authorization': `Bearer ${token}` // 🛑 ПЕРЕДАЧА ТОКЕНА
+                'Authorization': `Bearer ${token}` 
             }
         })
         .then((res) => {
@@ -66,3 +64,12 @@ export const removeReservationRequest = async (
             throw err.response?.data || { message: "Failed to unreserve slot." };
         });
 };
+
+
+export const makeAnAppointmentRequest = async(items:Order[],token:string)=>{
+    console.log('makeAnAppointmentRequest');
+    
+    return axios.post(`${API_URL}/orders/makeOrder`,{items},{
+        headers:{Authorization:`Bearer ${token}`}
+    })
+}
