@@ -108,11 +108,9 @@ export const unreserveAndRemoveOrder = createAsyncThunk(
 );
 export const makeAnAppointment = createAsyncThunk("cart/makeAnAppointment",async(_,{getState,dispatch,rejectWithValue})=>{
   try {
-    console.log('1. Thunk started'); // Добавьте этот лог
     const state =getState() as RootState;
   const items = state.basket.basket;
     const userToken = await AsyncStorage.getItem('token');
-  console.log('2. Items from state:', items.length);
     if (!userToken) return rejectWithValue("Авторизуйтесь для оформления");
     if (items.length === 0) return rejectWithValue("Корзина пуста");
 

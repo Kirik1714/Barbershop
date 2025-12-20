@@ -6,7 +6,8 @@ export const Colors = {
 	primary:'#007AFF',
 	success : "#34C759",
 	black:'#000000',
-	gray:'#898989'
+	gray:'#898989',
+	red:'#FFF5F5',
 
 	
 };
