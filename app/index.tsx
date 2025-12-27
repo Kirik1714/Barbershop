@@ -16,9 +16,8 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { loadUserFromStorage, loginUser } from "@/store/slices/AuthSlices";
+import {  checkAuth, loginUser } from "@/store/slices/AuthSlices";
 import { loadBasketFromStorage } from "@/store/slices/CartSlices";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login() {
   const router = useRouter();
@@ -35,7 +34,7 @@ export default function Login() {
     dispatch(loginUser({email,password}))
   };
   useEffect(() => {
-    dispatch(loadUserFromStorage());
+    dispatch(checkAuth());
     dispatch(loadBasketFromStorage())
 
   }, []);

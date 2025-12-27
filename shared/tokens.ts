@@ -8,7 +8,7 @@ export const Colors = {
 	black:'#000000',
 	gray:'#898989',
 	red:'#FFF5F5',
-
+	button__red:'#FF3B30',
 	
 };
 

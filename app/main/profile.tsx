@@ -3,13 +3,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Colors, Fonts } from "@/shared/tokens";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "@/store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
 import { logout } from "@/store/slices/AuthSlices";
 import { useRouter } from "expo-router";
 
 export default function Profile() {
   const dispatch= useDispatch<AppDispatch>();
+  const user= useSelector((state:RootState)=>state.auth.user)
   const router = useRouter();
 
   const handleLogOut=()=>{
@@ -28,16 +29,16 @@ export default function Profile() {
             source={require("../../assets/images/noImage.png")}
             style={styles.user__foto}
           />
-          <Text style={styles.user__name}>Name</Text>
+          <Text style={styles.user__name}>{user?.name}</Text>
         </View>
         <View style={styles.actions}>
-          <TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8} onPress={()=>router.push('/user/appointments')}>
             <View style={[styles.action, styles.action__my__orders]}>
               <FontAwesome6 name="calendar-alt" size={30} color="black" />
               <Text style={styles.action__text}>Мои записи</Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity>
+          {user?.role ==='MASTER' && <TouchableOpacity>
             <View style={[styles.action, styles.action__my__schedule]}>
               <FontAwesome6
                 name="scissors"
@@ -48,7 +49,8 @@ export default function Profile() {
 
               <Text style={styles.action__text}>График записей</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> }
+          
           <TouchableOpacity onPress={()=>handleLogOut()}>
             <View style={[styles.action, styles.action__leave]}>
               <FontAwesome
