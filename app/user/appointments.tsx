@@ -1,10 +1,25 @@
+import AppointmentSwitcher from "@/shared/components/AppointmentSwitcher";
 import MyAppointment from "@/shared/components/MyAppointment";
 import ReturnButton from "@/shared/components/ReturnButton";
-import { Colors, Fonts } from "@/shared/tokens";
+import {  Fonts } from "@/shared/tokens";
+import { getMyAppointments } from "@/store/slices/AppointmentSlice";
+import { AppDispatch, RootState } from "@/store/store";
+import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Appointments() {
+
+  const dispatch=useDispatch<AppDispatch>();
+  const appointments = useSelector((state:RootState)=>state.appointment.appointments)
+
+  useEffect(()=>{
+
+        dispatch(getMyAppointments())
+      
+    
+  },[])
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -13,7 +28,7 @@ export default function Appointments() {
       </View>
       <View style={styles.content}>
         <View style={styles.content__switcher}>
-          <Text>Switcher</Text>
+          <AppointmentSwitcher/>
         </View>
         <View style={styles.content__appointment}>
             <MyAppointment/>

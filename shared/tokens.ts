@@ -1,3 +1,4 @@
+
 export const Colors = {
 	
 	white: '#FAFAFA',
@@ -9,6 +10,8 @@ export const Colors = {
 	gray:'#898989',
 	red:'#FFF5F5',
 	button__red:'#FF3B30',
+	green:"#4CAF50",
+	
 	
 };
 
