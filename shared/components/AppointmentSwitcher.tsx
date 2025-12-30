@@ -9,16 +9,21 @@ import {
 } from "react-native";
 import { Colors, Fonts } from "../tokens";
 
+interface AppointmentSwitcherProps{
+  onTabChange:(tab:"upcoming" | "past")=>void;
+}
+
 const { width } = Dimensions.get("window");
 const SWITCHER_WIDTH = width - 40;
 const TAB_WIDTH = SWITCHER_WIDTH / 2;
 
-export default function AppointmentSwitcher() {
+export default function AppointmentSwitcher({onTabChange}:AppointmentSwitcherProps) {
   const translateX = useRef(new Animated.Value(0)).current;
   const [activeTab, setActiveTab] = useState<"upcoming" | "past">("upcoming");
 
   const handleTabPress = (tab: "upcoming" | "past") => {
     setActiveTab(tab)
+    onTabChange(tab)
     Animated.spring(translateX, {
       toValue: tab === "upcoming" ? 0 : TAB_WIDTH,
       useNativeDriver: true,

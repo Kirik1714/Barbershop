@@ -4,22 +4,38 @@ import ReturnButton from "@/shared/components/ReturnButton";
 import {  Fonts } from "@/shared/tokens";
 import { getMyAppointments } from "@/store/slices/AppointmentSlice";
 import { AppDispatch, RootState } from "@/store/store";
-import { useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useEffect, useMemo, useState } from "react";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Appointments() {
 
   const dispatch=useDispatch<AppDispatch>();
-  const appointments = useSelector((state:RootState)=>state.appointment.appointments)
-
+  const appointments = useSelector((state:RootState)=>state.appointment.appointments);
+  const [filter,setFilter]=useState<"upcoming" | "past">('upcoming');
   useEffect(()=>{
-
         dispatch(getMyAppointments())
       
-    
   },[])
+
+  const filteredData=useMemo(()=>{
+    const now=new Date();
+
+    return appointments.filter((item)=>{
+      const datePast = item.date.split("T")[0];
+      const appointmentDate= new Date(`${datePast}T${item.time}:00`);
+
+      if(filter==='upcoming'){
+        return appointmentDate>=now
+      }else{
+        return appointmentDate<now;
+      }
+    })
+
+  },[filter,appointments])
+
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -28,10 +44,22 @@ export default function Appointments() {
       </View>
       <View style={styles.content}>
         <View style={styles.content__switcher}>
-          <AppointmentSwitcher/>
+          <AppointmentSwitcher onTabChange={(tab)=>setFilter(tab)}/>
         </View>
         <View style={styles.content__appointment}>
-            <MyAppointment/>
+          <FlatList 
+          data={filteredData}
+          keyExtractor={(item)=>item.id.toString()}
+          contentContainerStyle={{paddingBottom:100}}
+          renderItem={({item})=>(
+            <MyAppointment  appointment ={item} filter={filter}/>
+          )}
+
+          />
+
+       
+
+         
         </View>
       </View>
     </SafeAreaView>

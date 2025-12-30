@@ -9,7 +9,7 @@ export interface IAppointment{
         photoUrl:string |null;
     };
     service:{
-        name:string;
+        title:string;
         price:number;
     }
 }

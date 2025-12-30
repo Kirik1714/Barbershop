@@ -1,28 +1,39 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Colors, Fonts } from "../tokens";
+import { IAppointment } from "@/types/appointment";
 
-export default function MyAppointment() {
-  const master = "YAA";
+interface MyAppointmentProps {
+  appointment: IAppointment;
+  filter: "upcoming" | "past";
+}
+
+export default function MyAppointment({
+  appointment,
+  filter,
+}: MyAppointmentProps) {
+  const { master, service, date, time, price } = appointment;
+  const photoUri = master.photoUrl
+    ? { uri: `http://10.0.2.2:3000${master.photoUrl}` }
+    : require("../../assets/images/noImage.png");
   return (
     <View style={styles.container}>
       <View style={styles.date__time}>
-        <Text style={styles.dateText}>Дата</Text>
-        <Text style={styles.timeText}>Время</Text>
+        <Text style={styles.dateText}>{date.split("T")[0]}</Text>
+        <Text style={styles.timeText}>{time}</Text>
       </View>
       <View style={styles.description}>
-        <Image
-          style={styles.img__master}
-          source={require("../../assets/images/noImage.png")}
-        />
+        <Image style={styles.img__master} source={photoUri} />
         <View style={styles.info}>
-          <Text style={styles.name__master}>Мастер {master}</Text>
-          <Text style={styles.service}>Услуга</Text>
+          <Text style={styles.name__master}> {master.name}</Text>
+          <Text style={styles.service}>{service.title}</Text>
         </View>
-        <Text style={styles.price}>цена: 200</Text>
+        <Text style={styles.price}>{price} BYN</Text>
       </View>
-      <TouchableOpacity style={styles.remove__appointment}>
-        <Text style={styles.removeText}>Отменить</Text>
-      </TouchableOpacity>
+      {filter === "upcoming" && (
+        <TouchableOpacity style={styles.remove__appointment}>
+          <Text style={styles.removeText}>Отменить</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
