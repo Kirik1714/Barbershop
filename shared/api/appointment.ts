@@ -22,3 +22,21 @@ export const getMyAppointmentsRequest =async()=>{
          
     }
 }
+
+export const cancelAppointmentRequest=async(id:number)=>{
+    try {
+        const token = await AsyncStorage.getItem("token");
+        const res = await axios.patch(`${API_URL}/users/appointment/${id}/cancel`,{},
+            {
+                
+                headers:{
+                     Authorization:`Bearer ${token}`
+                }
+            }
+        )
+        return res.data
+    } catch (error:any) {
+        console.log("Ошибка запроса cancelAppointmentRequest:", error.message, error.response?.data);
+    throw error;
+    }
+}

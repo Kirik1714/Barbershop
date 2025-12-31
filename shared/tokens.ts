@@ -11,6 +11,7 @@ export const Colors = {
 	red:'#FFF5F5',
 	button__red:'#FF3B30',
 	green:"#4CAF50",
+	dark__white:'#F9F9F9'
 	
 	
 };

@@ -1,4 +1,4 @@
-import { getMyAppointmentsRequest } from "@/shared/api/appointment";
+import { cancelAppointmentRequest, getMyAppointmentsRequest } from "@/shared/api/appointment";
 import { IAppointment } from "@/types/appointment";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
@@ -29,6 +29,18 @@ export const getMyAppointments = createAsyncThunk(
 
     }
 )
+export const cancelAppointment = createAsyncThunk(
+    "appointments/cancelAppointment", async(id:number,thunkAPI)=>{
+      try {
+        await cancelAppointmentRequest(id)
+        return id;
+      } catch (error:any) {
+        return thunkAPI.rejectWithValue(error.response?.data?.message || "Ошибка при удалении услуги");
+      }
+    }
+
+
+)
 
 const appointmentSlice = createSlice({
   name: "appointment",
@@ -51,6 +63,15 @@ const appointmentSlice = createSlice({
           state.isLoading = false;
           state.error = action.payload as string;
         });
+    //cancelAppointment
+    builder.addCase(cancelAppointment.fulfilled,(state,action)=>{
+      const appointment = state.appointments.find((item)=> Number(item.id) ===Number(action.payload));
+      if(appointment){
+        appointment.status = 'cancelled'
+      }
+      
+    })
+
   }
  
 });
