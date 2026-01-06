@@ -38,7 +38,7 @@ export default function Profile() {
               <Text style={styles.action__text}>Мои записи</Text>
             </View>
           </TouchableOpacity>
-          {user?.role ==='MASTER' && <TouchableOpacity>
+          {user?.role ==='MASTER' && <TouchableOpacity activeOpacity={0.8} onPress={()=>router.push('/user/schedule')} >
             <View style={[styles.action, styles.action__my__schedule]}>
               <FontAwesome6
                 name="scissors"
