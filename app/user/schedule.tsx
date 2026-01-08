@@ -8,48 +8,70 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import ReturnButton from "@/shared/components/ReturnButton";
 import { Colors, Fonts } from "@/shared/tokens";
+import { useLocalSearchParams } from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store/store";
+import { clearSchedule, getScheduleByMaster } from "@/store/slices/MastersSlices";
 
 export default function Schedule() {
-  // Убираем анимации, оставляем только флаг для скрытия лоадера
-  const [loading, setLoading] = useState(true);
+  const { masterId } = useLocalSearchParams();
+  const dispatch=useDispatch<AppDispatch>()
+
+
+  const { schedule, loading } = useSelector(
+    (state: RootState) => state.masters
+  );
   const todayStr = useMemo(() => new Date().toISOString().split("T")[0], []);
+  const [currentMonth, setCurrentMonth] = useState(todayStr.substring(0, 7));
+
+  
 
   useEffect(() => {
-    // Используем setImmediate или минимальный тиков, чтобы просто дать JS один кадр на отрисовку
-    const timer = setTimeout(() => setLoading(false), 0);
-    return () => clearTimeout(timer);
-  }, []);
+    if (masterId) {
+      dispatch(getScheduleByMaster({masterId:String(masterId),month:currentMonth}))
+    }
+    return () => {
+      dispatch(clearSchedule());
+    };
+  }, [masterId, currentMonth, dispatch]);
+  
 
-  const eventsByDate = useMemo(() => ({
-    [todayStr]: [
-      {
-        id: "1",
-        start: `${todayStr} 10:00:00`,
-        end: `${todayStr} 10:45:00`,
-        title: "Алексей",
-        summary: "Мужская стрижка",
-        color: Colors.milk,
-      },
-    ],
-  }), [todayStr]);
+  const onDateChanged = useCallback((date:string)=>{
+    const newMonts = date.substring(0,7);
+    if(newMonts !==currentMonth){
+      setCurrentMonth(newMonts)
+   
+    }
+  },[currentMonth])
 
-  const renderEvent = useCallback((event: any) => (
-    <View style={[styles.event, { backgroundColor: event.color }]}>
-      <Text style={styles.event__title}>{event.title}</Text>
-      <Text style={styles.event__summary}>{event.summary}</Text>
-    </View>
-  ), []);
 
-  const timelineProps = useMemo(() => ({
-    format24h: true,
-    start: 8,
-    end: 22,
-    unavailableHours: [{ start: 0, end: 8 }, { start: 22, end: 24 }],
-    overlapEventsSpacing: 8,
-    rightEdgeSpacing: 24,
-    renderEvent: renderEvent,
-    scrollToNow: true, 
-  }), [renderEvent]);
+
+  const renderEvent = useCallback(
+    (event: any) => (
+      <View style={[styles.event, { backgroundColor: event.color }]}>
+        <Text style={styles.event__title}>{event.title}</Text>
+        <Text style={styles.event__summary}>{event.summary}</Text>
+      </View>
+    ),
+    []
+  );
+
+  const timelineProps = useMemo(
+    () => ({
+      format24h: true,
+      start: 8,
+      end: 22,
+      unavailableHours: [
+        { start: 0, end: 8 },
+        { start: 22, end: 24 },
+      ],
+      overlapEventsSpacing: 8,
+      rightEdgeSpacing: 24,
+      renderEvent: renderEvent,
+      scrollToNow: true,
+    }),
+    [renderEvent]
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
@@ -61,16 +83,17 @@ export default function Schedule() {
       </View>
 
       <View style={{ flex: 1 }}>
-    
-        <CalendarProvider date={todayStr}>
+        <CalendarProvider date={todayStr} onDateChanged={onDateChanged}>
           <ExpandableCalendar
             firstDay={1}
             allowShadow={false}
-            markedDates={{ [todayStr]: { marked: true, dotColor: Colors.primary } }}
+            markedDates={{
+              [todayStr]: { marked: true, dotColor: Colors.primary },
+            }}
           />
           <View style={styles.timelineWrapper}>
             <TimelineList
-              events={eventsByDate}
+              events={schedule || {}}
               showNowIndicator
               scrollToFirst
               initialTime={{ hour: 9, minutes: 0 }}
@@ -104,7 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.white,
-    zIndex: 99, 
+    zIndex: 99,
   },
   timelineWrapper: { flex: 1 },
   event: {
