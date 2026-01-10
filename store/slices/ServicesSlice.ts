@@ -8,7 +8,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface ServicesState {
   count: number;
-  services:Service[] | null,
+  services:Service[],
+  hasMore:boolean,
   loading: boolean,
   error: string | null;
 
@@ -16,11 +17,11 @@ interface ServicesState {
 
 export const getAllServives = createAsyncThunk(
   "service/getAllServices",
-  async (_, thunkAPI) => {
+  async ({limit,page,search}:{limit:number,page:number,search?:string}, thunkAPI) => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
 
-      const res = await getAllServicesRequest();
+      const res = await getAllServicesRequest(limit,page,search);
       
       return res.data; 
       
@@ -33,9 +34,10 @@ export const getAllServives = createAsyncThunk(
 
 const initialState: ServicesState = {
   count: 0,
-  services:null,
+  services:[],
   loading:false,
   error: null,
+  hasMore:true,
 };
 
 const ServicesSlice = createSlice({
@@ -50,8 +52,14 @@ const ServicesSlice = createSlice({
         });
         builder.addCase(getAllServives.fulfilled, (state, action) => {
           state.loading = false;
-          state.services = action.payload.data;
-          state.count = action.payload.data.length || 0;
+          const {data,hasMore,totalCount}= action.payload;
+          if(action.meta.arg.page ===0){
+            state.services=data
+          }else{
+            state.services= [...state.services,...data]
+          }
+          state.hasMore=hasMore
+          state.count = totalCount;
 
         });
         builder.addCase(getAllServives.rejected, (state, action) => {

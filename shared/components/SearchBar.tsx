@@ -2,7 +2,12 @@ import { StyleSheet, TextInput, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors, Fonts } from "../tokens";
 
-export default function SearchBar() {
+interface ISearchBar{
+  value:string,
+  onChangeText:(text:string)=>void
+}
+
+export default function SearchBar({value,onChangeText}:ISearchBar) {
   return (
     <View style={styles.container}>
       <Ionicons
@@ -13,8 +18,11 @@ export default function SearchBar() {
       />
       <TextInput
         placeholder="Поиск"
+        value={value}
+        onChangeText={onChangeText}
         placeholderTextColor={Colors.grey}
         style={styles.input}
+        
       ></TextInput>
     </View>
   );
@@ -37,6 +45,6 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: Fonts.f17,
     color: Colors.black,
-    fontFamily: "FiraSans-SemiBold",
+    // fontFamily: "FiraSans-SemiBold",
   },
 });

@@ -38,20 +38,7 @@ export default function Login() {
     dispatch(loadBasketFromStorage())
 
   }, []);
-//  useEffect(() => {
-//         const resetBasketKey = async () => {
-//             try {
-//                 await AsyncStorage.removeItem("basket");
 
-//             } catch (e) {
-//                 console.error('Failed to reset basket key:', e);
-//             }
-//         };
-
-//         resetBasketKey();
-        
-
-//     }, []);
 
 
   useEffect(() => {

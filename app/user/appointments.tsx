@@ -51,6 +51,8 @@ export default function Appointments() {
           data={filteredData}
           keyExtractor={(item)=>item.id.toString()}
           contentContainerStyle={{paddingBottom:100}}
+          showsVerticalScrollIndicator={false}
+          style={styles.list}
           renderItem={({item})=>(
             <MyAppointment  appointment ={item} filter={filter}/>
           )}
@@ -80,7 +82,14 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 25,
   },
-  content: {},
+  content: {
+    flex:1,
+  },
+  list:{
+    flex:1,
+  },
   content__switcher:{},
-  content__appointment:{}
+  content__appointment:{
+    flex: 1,
+  }
 });
